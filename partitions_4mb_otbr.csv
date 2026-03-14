@@ -1,0 +1,17 @@
+# ESP32-C6 XIAO — 4 MB partition table for ot_br (no OTA, no RCP image slot)
+#
+# Flash layout (total 0x400000 = 4 MB):
+#   0x000000 – 0x007FFF  bootloader       (IDF managed)
+#   0x008000 – 0x008FFF  partition table  (IDF managed)
+#   0x009000 – 0x00EFFF  nvs              24 KB  – Wi-Fi creds, Thread dataset
+#   0x00F000 – 0x00FFFF  phy_init         4 KB   – RF calibration data
+#   0x010000 – 0x30FFFF  factory app      3 MB   – ot_br firmware
+#   0x310000 – 0x310FFF  nvs_keys         4 KB   – NVS encryption keys
+#   0x311000 – 0x3FFFFF  storage          956 KB – extra NVS / OpenThread data
+#
+# Name,     Type,  SubType,   Offset,    Size
+nvs,        data,  nvs,       0x9000,    0x6000,
+phy_init,   data,  phy,       0xf000,    0x1000,
+factory,    app,   factory,   0x10000,   0x300000,
+nvs_keys,   data,  nvs_keys,  0x310000,  0x1000,
+storage,    data,  nvs,       0x311000,  0xef000,
