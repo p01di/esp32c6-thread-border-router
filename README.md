@@ -1,3 +1,23 @@
+**⚠️ Early Proof of Concept**
+
+This project is a working proof of concept, not a polished product. I got it 
+working on my setup — your mileage may vary, especially depending on your 
+network configuration (IPv6 routing, NAT66, VM networking all matter).
+
+**Known limitations to be aware of:**
+- Uses the ESP32-C6's internal PCB antenna — RF range is limited, keep it 
+  close to both your WiFi router and your Thread devices
+- WiFi and Thread share a single RF path — performance is worse than a 
+  dedicated two-chip border router
+- Has not been extensively tested beyond the author's own setup
+
+**AI disclosure:** I'm just an enthusiast, not an embedded systems expert. 
+This project was built with very heavy assistance from 
+[Claude Sonnet 4.5](https://www.anthropic.com/claude) (Anthropic), including 
+the firmware patches, troubleshooting, and this writeup. The AI was essential 
+— I could not have done this without it. Use the code accordingly and please 
+improve on it!
+
 # ESP32-C6 Thread Border Router for Home Assistant
 
 Turn a $5 XIAO ESP32-C6 into a fully functional Thread Border Router that connects Matter/Thread devices (like the IKEA Vindstyrka / Alpstuga air quality sensor) to Home Assistant — with no additional hardware required.
