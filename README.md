@@ -6,17 +6,17 @@ network configuration (IPv6 routing, NAT66, VM networking all matter).
 
 **Known limitations to be aware of:**
 - Uses the ESP32-C6's internal PCB antenna — RF range is limited, keep it 
-  close to both your WiFi router and your Thread devices
+  close to both your WiFi router and your Thread devices. I'll try to get
+  it working with the external antenna if i find some time
 - WiFi and Thread share a single RF path — performance is worse than a 
   dedicated two-chip border router
 - Has not been extensively tested beyond the author's own setup
 
 **AI disclosure:** I'm just an enthusiast, not an embedded systems expert. 
 This project was built with very heavy assistance from 
-[Claude Sonnet 4.5](https://www.anthropic.com/claude) (Anthropic), including 
-the firmware patches, troubleshooting, and this writeup. The AI was essential 
-— I could not have done this without it. Use the code accordingly and please 
-improve on it!
+Claude Sonnet 4.6, including the firmware patches, troubleshooting, and this
+writeup. The AI was essential  — I could not have done this without it. Use 
+the code accordingly and please improve on it!
 
 # ESP32-C6 Thread Border Router for Home Assistant
 
@@ -35,14 +35,14 @@ Turn a $5 XIAO ESP32-C6 into a fully functional Thread Border Router that connec
 
 ## Hardware required
 
-- [Seeed Studio XIAO ESP32-C6](https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html) (~$5)
-- USB-C cable for power (charge-only cable is fine after flashing)
+- [Seeed Studio XIAO ESP32-C6](https://www.seeedstudio.com/Seeed-Studio-XIAO-ESP32C6-p-5884.html) (~$5-$10)
+- USB-C cable for data and power (charge-only cable is fine after flashing)
 - A PC/Mac/Linux machine for flashing (one time only)
 
 ## Compatibility
 
 Tested with:
-- IKEA Vindstyrka / Alpstuga (Matter over Thread air quality sensor)
+- IKEA Alpstuga (Matter over Thread air quality sensor)
 - Home Assistant running in a VM (with bridged networking)
 - pfsense router (see [Network Notes](#network-notes) for IPv6 requirements)
 
@@ -50,7 +50,7 @@ Should work with any Matter over Thread device.
 
 ## Prerequisites
 
-- Home Assistant with the **Matter (BETA)** integration and **Matter Server** add-on installed
+- Home Assistant with the **Matter** integration and **Matter Server** add-on installed
 - A router that supports IPv6 (required for Thread/Matter)
 - **NAT66 must be disabled** on your router — Matter commissioning requires real IPv6 end-to-end connectivity
 
@@ -193,7 +193,7 @@ If both work, your border router is ready.
 1. Install the **Home Assistant Companion app** on your phone
 2. Go to **Settings → Companion app → Troubleshooting → Sync Thread credentials**
 3. Go to **Settings → Devices & Services → Add Integration → Matter**
-4. Scan the QR code on your device or enter the setup code
+4. Scan the QR code on your device or enter the setup code (only got it working using the code for now)
 5. Follow the prompts — the device will join the Thread network and appear in HA
 
 ---
@@ -208,15 +208,15 @@ Thread/Matter requires proper **end-to-end IPv6 connectivity**. Several common n
 ### Home Assistant in a VM
 Make sure the VM uses **bridged networking** (not NAT). The VM must be on the same network segment as the ESP border router.
 
-### Static route for Thread prefix
-The ESP advertises the Thread network prefix (`fd55:ec6e:b588::/48` by default) via Router Advertisements. If your router blocks or doesn't propagate these, add a static IPv6 route:
+### Static route for Thread prefix (probably optional)
+The ESP advertises the Thread network prefix (eg `fd55:ec6e:b588::/48` by default) via Router Advertisements. If your router blocks or doesn't propagate these, add a static IPv6 route:
 
-- **Destination:** `fd55:ec6e:b588::/48` (check your actual prefix from the dataset)
+- **Destination:** eg `fd55:ec6e:b588::/48` (check your actual prefix from the dataset)
 - **Gateway:** ESP's link-local IPv6 address (visible in router's neighbor table)
 
 ### pfsense specific
 1. Add a static IPv6 gateway pointing to the ESP's link-local address
-2. Add a firewall rule on LAN (above the default IPv6 rule) routing `fd55:ec6e:b588::/48` via the ESP gateway
+2. Add a firewall rule on LAN (above the default IPv6 rule) routing eg `fd55:ec6e:b588::/48` via the ESP gateway
 3. Disable NAT66
 
 ---
@@ -225,7 +225,7 @@ The ESP advertises the Thread network prefix (`fd55:ec6e:b588::/48` by default) 
 
 ### WiFi won't connect
 - Check SSID and password in menuconfig
-- The onboard antenna is small — keep the ESP within 5m of your router
+- The onboard antenna is small — keep the ESP within 5m of your router (or closer, same with the thread device!)
 - Signal below -85 dBm causes instability with Thread coexistence
 
 ### Build fails with "Tool doesn't match supported version"
@@ -292,8 +292,7 @@ python -m esptool --chip esp32c6 -p <PORT> write_flash 0x0 backup.bin
 
 This is an early proof of concept. Known areas for improvement:
 
-- ESPHome integration (would make deployment much easier)
-- Two-chip variant with dedicated Thread radio for better RF performance
+- ESPHome integration (would make deployment much easier, that would be nice)
 - Automatic IPv6 route advertisement to upstream routers
 - OTA update support
 
