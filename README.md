@@ -20,7 +20,7 @@ the code accordingly and please improve on it!
 
 # ESP32-C6 Thread Border Router for Home Assistant
 
-Turn a $5 XIAO ESP32-C6 into a fully functional Thread Border Router that connects Matter/Thread devices (like the IKEA Vindstyrka / Alpstuga air quality sensor) to Home Assistant — with no additional hardware required.
+Turn a $5 XIAO ESP32-C6 into a fully functional Thread Border Router that connects Matter/Thread devices (like the IKEA Alpstuga air quality sensor) to Home Assistant — with no additional hardware required.
 
 ![ESP32-C6 Thread Border Router](https://img.shields.io/badge/ESP32--C6-Thread%20Border%20Router-blue)
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Matter%2FThread-green)
